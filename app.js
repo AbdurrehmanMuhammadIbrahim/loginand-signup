@@ -5,13 +5,13 @@ const path = require("path");
 var cors = require('cors')
 const mongoose = require('mongoose');
 
-
-mongoose.connect('mongodb+srv://saim:123@user.dkpid.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+// mongoose.connect('mongodb+srv://saim:123@user.dkpid.mongodb.net/myFirstDatabase?retryWrites=true&w=majority');
+mongoose.connect('mongodb+srv://abdurrehman:Disccompact890@cluster0.7d9p9.mongodb.net/users?retryWrites=true&w=majority');
 
 app.use(cors(["localhost:5000", "localhost:3000"]))
 app.use(express.json())
 
-app.use("/", express.static(path.join(__dirname, "login/build")));
+app.use("/", express.static(path.join(__dirname, "forms/build")));
 
 const User = mongoose.model('User', 
 
@@ -52,26 +52,59 @@ const User = mongoose.model('User',
 
 
 
+app.get("/**", (req, res, next) => {
+  // res.sendFile(path.join(__dirname, "./web/build/index.html"))
+  res.redirect("/")
+})
 
 
 
 
 
-app.get("/api/v1/profile", (req, res) => {
-  res.send({
-    name: "abdurrehman",
-    rollno: "12345",
-    address: "ffbeegjebgie vlnv genviwe",
+app.get("/api/v1/login", (req, res) => {
+  res.send(User)
+ 
   });
-});
+  app.post('/api/v1/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    if (!req.body.email ||
+        !req.body.password
+    ) {
+        console.log("required field missing");
+        res.status(403).send("required field missing");
+        return;
+    }
+
+    console.log(req.body)
+
+
+    User.findOne({ email: email })
+        .then(userData => {
+            console.log(userData)
+            if (userData.password === password) {
+                res.json(
+                    userData
+                )
+            }
+            else {
+                res.send("Invalid email")
+                res.status(401).json('Password Incorrect')
+            }
+        })
+        .catch(err => 
+            {
+            res.send("Invalid email")
+            res.status(400).json('Error: ' + err)
+        });
+})
 
 
 app.put("/api/v1/profile", (req, res) => {
   res.send("Hello HERE IS YOUR PROFILE!");
 });
-app.post("/api/v1/profile", (req, res) => {
-  res.send("Hello HERE IS YOUR PROFILE!");
-});
+
 app.delete("/api/v1/profile", (req, res) => {
   res.send("Hello! PROFILE IS DELETED");
 });

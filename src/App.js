@@ -1,150 +1,97 @@
 // import logo from './logo.svg';
 import './App.css';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import { useFormik } from 'formik';
+import React from "react";
+import Login from "./components/Login"
+import Signup from "./components/Signup"
+import Dashboard from "./components/Dashboard"
+import Post from "./components/Post"
 import Button from "@mui/material/Button";
-import * as Yup from 'yup';
-import axios from 'axios';
-import { baseurl } from './core';
+// import * as Yup from 'yup';
+// import axios from 'axios';
+// import { baseurl } from './core';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
 
-
-
-
-
-
-
-const SignupSchema = Yup.object({
-  firstName: Yup
-  .string('Enter your First Name')
-    .min(3, 'Too Short!')
-    .max(20, 'Too Long!')
-    .required('Enter your FirstName'),
-  lastName: Yup
-  .string()
-    .min(3, 'Too Short!')
-    .max(20, 'Too Long!')
-    .required('Enter your LastName'),
-  email: Yup
-
-  .string('Enter your Email')
-  .email('Enter a valid Email')
-  // if (!values.email) {
-  //   errors.email = 'Required';
-  // } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-  //   errors.email = 'Invalid email address';
-  // }
-    .min(6, 'Too Short!')
-    .max(50, 'Too Long!')
-    .required('Required'),
-    password:Yup
-    .string('Enter your Password')
-  .required('Enter a password')
-    .min(6, 'password is weak!')
-    .required('Please enter password here'),
-});
-
-
-
-
-function onSubmitFunction(values) {
-  console.log("values: ", values)
-  axios.post(`${baseurl}/api/v1/login`,
-  {
-      firstName: values.firstName,
-      lastName:values.lastName,
-      email: values.email,
-      password: values.password,
-  }
-  )
-}
-
-
-
-
-
-function App(){
-  const formik = useFormik({
-    validationSchema: SignupSchema,
-    initialValues: {
-      firstName:'',
-      lastName:'',
-      email: '',
-      password: '',
-    },
-   
-
-    onSubmit: onSubmitFunction
-
-  });
-
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+function App() {
   return (
-  <div className="main">
-    <div className="form">
 
-     <h1>SIGNUP FORM</h1>
 
-      <form onSubmit={formik.handleSubmit}>
-      <Stack spacing={2}>
-      <TextField
-          fullWidth
-          className="text"
-          color="secondary"
+    
+      
 
-          id="firstName"
-          name=""
-          label="FisrtName"
-          value={formik.values.firstName}
-          onChange={formik.handleChange}
-          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-          helperText={formik.touched.firstName && formik.errors.firstName}
-        />
-      <TextField
-          fullWidth
-          className="text"
-          color="secondary"
-          id="lastName"
-          name="lastName"
-          label="lastName"
-          value={formik.values.lastName}
-          onChange={formik.handleChange}
-          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-          helperText={formik.touched.lastName && formik.errors.lastName}
-        />
-        <TextField
-          fullWidth
-          color="secondary"
-          className="text"
-          id="email"
-          name="email"
-          label="Email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
-        />
-        <TextField
-          fullWidth
-          color="secondary"
-          className="text"
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-          error={formik.touched.password && Boolean(formik.errors.password)}
-          helperText={formik.touched.password && formik.errors.password}
-        />
-        <Button color="secondary" variant="contained" fullWidth type="submit">
-          Submit
-        </Button>
-        </Stack>
-      </form>
+
+    <div className="App">
+     <Router>
+ 
+    <div>
+<Box sx={{ flexGrow: 1 }}>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+     FORMS
+        </Typography>
+        <Button color="secondary"><Link to="/signup">Signup</Link></Button>
+        <Button color="secondary"> <Link to="/Login">Login</Link></Button>
+        <Button color="secondary"> <Link to="/">Logout</Link></Button>
+      </Toolbar>
+    </AppBar>
+  </Box>
+      {/* <nav>
+        <ul>
+          <li>
+            <Link to="/">Dashboard</Link>
+          </li>
+          <li>
+            <Link to="/Signup">Signup</Link>
+          </li>
+          <li>
+            <Link to="/Login">Login</Link>
+          </li>
+        </ul>
+      </nav> */}
+      <Switch>
+          <Route path="/Signup">
+            < Signup/>
+          </Route>
+          <Route path="/Login">
+            <Login />
+          </Route>
+          <Route path="/Post">
+            <Post />
+          </Route>
+          <Route exact path="/">
+            <Dashboard />
+
+          </Route>
+        </Switch>
       </div>
+    </Router>
+
+
+
+    
     </div>
   );
- 
 }
-  export default App;
+
+export default App;
